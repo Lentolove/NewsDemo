@@ -1,5 +1,6 @@
 package com.tsp.newsdemo;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;
@@ -10,8 +11,13 @@ import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.tsp.newsdemo.activity.GuideActivity;
+import com.tsp.newsdemo.activity.MainActivity;
+import com.tsp.newsdemo.utils.CacheUtils;
+
 public class SplashActivity extends AppCompatActivity {
 
+    public static final String START_SPLASH = "start_splash";
     private RelativeLayout rl_splash_root;
 
     @Override
@@ -64,7 +70,21 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            Toast.makeText(SplashActivity.this, "动画播放完成了", Toast.LENGTH_SHORT).show();
+            // 1.判断是否已经进入过引导界面 存储缓冲值来记录
+            boolean isStartSplash = CacheUtils.getBoolean(SplashActivity.this, START_SPLASH);
+            Intent intent;
+            if (isStartSplash){
+                //2.如果进入到指导界面，直接进图主界面
+                intent = new Intent(SplashActivity.this,MainActivity.class);
+            }else {
+                //3.没有进入到指导界面
+                intent = new Intent(SplashActivity.this,GuideActivity.class);
+            }
+            startActivity(intent);
+            //关闭Splash界面
+            finish();
+
+            //Toast.makeText(SplashActivity.this, "动画播放完成了", Toast.LENGTH_SHORT).show();
         }
 
         @Override
